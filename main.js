@@ -42,18 +42,11 @@ $('#generate').click(function(){
     if(!nodes || nodes<=0)
         nodes = 5;
 
-    base = $("input[type='radio'][name='base']:checked").val();
-
     var graphType = $("input[type='radio'][name='gtype']:checked").val();
     isDirected = graphType == 0 ? false : true;
 
-
     var start = 0;
-
-    if(base && base == '1')
-        start++;
     var end = parseInt(start) + parseInt(nodes) - 1;
-
 
     var grWidth = graph.width();
     var grHeight = graph.height();

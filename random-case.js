@@ -17,11 +17,9 @@ $('#generate-case').click(function(){
 		alert('Invalid number of nodes!');
 	}
 
-	var start 		= $("input[type='radio'][name='start']:checked").val();
-	start 			= start == "1" ? 1 : 0;
-
-	isDirected 		= $('#directed').is(":checked")
-	isWeighted 		= $('#weighted').is(":checked")
+	var start = 0;
+	isDirected = $('#directed').is(":checked")
+	isWeighted = $('#weighted').is(":checked")
 
 	// max number of edges is n*(n-1) for directed and n*(n-1)/2 for undirected graphs
 
@@ -35,30 +33,26 @@ $('#generate-case').click(function(){
 
 	}
 
-	edges 			= [];
+	edges = [];
 
 
 	// generate all possible edges combination to select from
 
 	possibleEdges = [];
 
-	for(i = 0; i<numNodes; i++)
-		for(j = i+1; j<numNodes; j++)
+	for (i = 0; i<numNodes; i++)
+		for (j = i+1; j<numNodes; j++)
 		{
 			var v1 = i;
 			var v2 = j;
-
-			if(start) {
-				v1++; v2++;
-			}
 			
 			var w1 = null;
 			var w2 = null;
 
 			if(isWeighted)
 			{
-				var start 	= parseInt($('#minWeight').val());
-				var end 	= parseInt($('#maxWeight').val());	
+				var start = parseInt($('#minWeight').val());
+				var end = parseInt($('#maxWeight').val());
 
 				w1 = Math.floor(Math.random() * (end - start) + start);
 				w2 = Math.floor(Math.random() * (end - start) + start);
