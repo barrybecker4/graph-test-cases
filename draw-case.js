@@ -1,23 +1,23 @@
 function drag_start(event) {
-    var nodeNumber = +event.target.id.substring('node'.length);
+    draggedNode = +event.target.id.substring('node'.length);
     var style = window.getComputedStyle(event.target, null);
     var str = (parseInt(style.getPropertyValue("left")) - event.clientX) + ','
         + (parseInt(style.getPropertyValue("top")) - event.clientY)+ ',' + event.target.id;
     event.dataTransfer.setData("Text", str);
 }
 
-function drag_end(event) {
-    console.log("drag end: ", event);
-}
-
 function drop(event) {
     var offset = event.dataTransfer.getData("Text").split(',');
     var dm = document.getElementById(offset[2]);
-    dm.style.left = (event.clientX + parseInt(offset[0], 10)) + 'px';
-    dm.style.top = (event.clientY + parseInt(offset[1], 10)) + 'px';
-    console.log("coord: " + dm.style.left + " " + dm.style.top);
+    var x = (event.clientX + parseInt(offset[0], 10));
+    var y = (event.clientY + parseInt(offset[1], 10))
+    dm.style.left = x + 'px';
+    dm.style.top = y + 'px';
+    nodes[draggedNode] = [x, y];
+    draggedNode = -1;
     jsPlumb.empty("#graph");
     event.preventDefault();
+    outputTestCase();
     return false;
 }
 
@@ -27,48 +27,56 @@ function drag_over(event) {
 }
 
 
-var nodes = 5;
+var numNodes = 5;
 var base = 0;
 var edges = [];
 var isDirected = false;
+var includePositions = false;
+var bound = null;
+var draggedNode = -1;
 
-$('#generate').click(function(){
+$('#includePositions').click(function() {
+   includePositions = $('#includePositions').is(":checked");
+   outputTestCase();
+});
+
+$('#generate').click(function() {
     var graph = $('#graph');
     jsPlumb.empty("graph");
     graph.html('');
 
     edges = [];
+    nodes = [];
     isDirected = false;
-    nodes = $('#nodes').val();
-    if (!nodes || nodes<=0)
-        nodes = 5;
+    numNodes = $('#numNodes').val();
+    if (!numNodes || numNodes<=0)
+        numNodes = 5;
 
     var graphType = $("input[type='radio'][name='gtype']:checked").val();
     isDirected = graphType == 0 ? false : true;
 
-    var includePositions = $('#includePositions').is(":checked");
+    includePositions = $('#includePositions').is(":checked");
 
     var start = 0;
-    var end = parseInt(start) + parseInt(nodes) - 1;
+    var end = parseInt(start) + parseInt(numNodes) - 1;
 
     var grWidth = graph.width();
     var grHeight = graph.height();
     var radius = grWidth / 2 - 25;
     var grX = graph.position().left;
     var grY = graph.position().top;
-    var angleDiff = Math.PI * 2 / nodes;
+    var angleDiff = Math.PI * 2 / numNodes;
     for (i = start; i <= end; i++) {
-        var xPos = grX + radius + Math.cos(i*angleDiff) * radius / 1.4;
-        var yPos = grY + radius + Math.sin(i*angleDiff) * radius / 1.4;
+        var xPos = Math.round(grX + radius + Math.cos(i*angleDiff) * radius / 1.4);
+        var yPos = Math.round(grY + radius + Math.sin(i*angleDiff) * radius / 1.4);
         var newNode = '<div style="left:' + xPos +
           'px; top:' + yPos + 'px;" id="node' + i +
           '" class="node" draggable="true" ondragstart="drag_start(event)" node="' + i + '">' + i + '</div>';
+        nodes.push([xPos, yPos]);
         graph.append(newNode);
     }
     outputTestCase();
 });
-
-var bound = null
 
 $(document).on('click', '.node', function() {
     if (!bound) {
@@ -93,14 +101,15 @@ var addOrRemoveEdge = function(node1, node2, elem1, elem2) {
     if (node1 == node2 && !isDirected)
             return false;
 
-    for (i = 0; i<edges.length; i++) {
+    for (i = 0; i < edges.length; i++) {
         // if the edge exist delete edge
         if(edges[i].node1 && edges[i].node2
            && ((edges[i].node1 == node1  && edges[i].node2 == node2)
                || (!isDirected && edges[i].node1 == node2  && edges[i].node2 == node1))) {
             jsPlumb.detach(edges[i].conn);
-            edges.splice(i,1);
-            outputTestCase();  // update the output testCases
+            edges.splice(i, 1);
+
+            outputTestCase();
             return false;
         }
     }
@@ -127,9 +136,14 @@ var addOrRemoveEdge = function(node1, node2, elem1, elem2) {
 function outputTestCase() {
     $('#case').html('');
     $('#case').append("<h4>Input: </h4>")
-    $('#case').append(nodes + " " + edges.length + "<br>");
+    $('#case').append(numNodes + " " + edges.length + " " + includePositions + "<br>");
 
-    for(i = 0; i<edges.length; i++) {
+    if (includePositions) {
+        for (var i = 0; i < nodes.length; i++) {
+           $('#case').append(nodes[i][0] + " " + nodes[i][1] + "<br>");
+        }
+    }
+    for (var i = 0; i < edges.length; i++) {
         $('#case').append(edges[i].node1 + " " + edges[i].node2 + "<br>");
     }
 }

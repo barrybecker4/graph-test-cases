@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="description" content="An app to generate graph problems test cases by drawing the graph">
+    <meta name="keywords" content="graph algorithm test cases">
+    <title>Graph Test Cases</title>
+  </head>
+  <body>
+  <div id="sidenavCont">
+      <h3>Graph Generator</h3>
+      <hr>
+      <ul id="sidenav">
+        <li><a href="index.html">How it works</a></li>
+        <li><a href="draw-case.html">Draw Graph</a></li>
+        <li><a href="random-case.html">Random Graph</a></li>
+      </ul>
+  </div>
+  <div id="main">
+      <div id="inputarea">
+          <table>
+              <tr>
+                  <th>No. of nodes: </th>
+                  <td><input type="number" id="nodes" min="1" max="20" value="5"></td>
+              </tr>
+            <tr>
+                  <th>Graph type: </th>
+                  <td>
+                      <input type="radio" name="gtype" value="0" checked> Undirected<br>
+                    <input type="radio" name="gtype" value="1"> Directed
+                  </td>
+              </tr>
+            <tr>
+                <th>Include node positions: </th>
+                <td>
+                    <input type="checkbox" id="includePositions">
+                </td>
+            </tr>
+              <tr>
+                  <td><input type="button" id="generate" value="Generate Graph"></td>
+                  <td><input type="button" id="output" value="Generate Case"></td>
+              </tr>
+          </table>
+        <br>
+
+      </div>
+
+      <div id="grapharea">
+        <span id="chooseTarget"style="position: absolute; color:gray; display: none;">Choose target node</span>
+          <div id="graph" ondragover="drag_over(event)" ondrop="drop(event)"></div>
+      </div>
+
+  </div>
+  <div id="case"></div>
+
+  </body>
+
+    <link href="style.css" rel="stylesheet">
+    <script   src="https://code.jquery.com/jquery-2.2.4.min.js"   integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="   crossorigin="anonymous"></script>
+  <script src="jsPlumb-2.1.2.js"></script>
+  <script src="draw-case.js"></script>
+</html>
