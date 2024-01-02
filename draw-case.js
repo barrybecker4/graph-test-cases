@@ -32,11 +32,17 @@ var base = 0;
 var edges = [];
 var isDirected = false;
 var includePositions = false;
+var includeWeights = false;
 var bound = null;
 var draggedNode = -1;
 
 $('#includePositions').click(function() {
-   includePositions = $('#includePositions').is(":checked");
+   includePositions = getIncludePositions();
+   outputTestCase();
+});
+
+$('#includeWeights').click(function() {
+   includeWeights = getIncludeWeights();
    outputTestCase();
 });
 
@@ -55,7 +61,8 @@ $('#generate').click(function() {
     var graphType = $("input[type='radio'][name='gtype']:checked").val();
     isDirected = graphType == 0 ? false : true;
 
-    includePositions = $('#includePositions').is(":checked");
+    includePositions = getIncludePositions();
+    includeWeights = getIncludeWeights();
 
     var start = 0;
     var end = parseInt(start) + parseInt(numNodes) - 1;
@@ -87,7 +94,7 @@ $(document).on('click', '.node', function() {
     } else {
         var node1 = bound.attr('node');
         var node2 = $(this).attr('node');
-        var added = addOrRemoveEdge(node1,node2, bound, $(this));
+        var added = addOrRemoveEdge(node1, node2, bound, $(this));
 
         bound.css('border-color', 'black');
         bound.css('border-width','1px');
@@ -99,11 +106,11 @@ $(document).on('click', '.node', function() {
 
 var addOrRemoveEdge = function(node1, node2, elem1, elem2) {
     if (node1 == node2 && !isDirected)
-            return false;
+        return false;
 
     for (i = 0; i < edges.length; i++) {
-        // if the edge exist delete edge
-        if(edges[i].node1 && edges[i].node2
+        // if the edge exists. delete it
+        if (edges[i].node1 && edges[i].node2
            && ((edges[i].node1 == node1  && edges[i].node2 == node2)
                || (!isDirected && edges[i].node1 == node2  && edges[i].node2 == node1))) {
             jsPlumb.detach(edges[i].conn);
@@ -128,9 +135,25 @@ var addOrRemoveEdge = function(node1, node2, elem1, elem2) {
         anchor:'Center',
         overlays: isDirected ? [["Arrow" , { width:12, length:12, location:0.67 }]] : [],
     });
-    edges.push({node1 : node1, node2: node2, conn: connection});
+    edges.push({node1 : node1, node2: node2, conn: connection, weight: distance(+node1, +node2)});
     outputTestCase(); // update the output testCases
     return true;
+}
+
+function distance(node1, node2) {
+   var pt1 = nodes[node1];
+   var pt2 = nodes[node2];
+   var diffX = pt1[0] - pt2[0];
+   var diffY = pt1[1] - pt2[1];
+   return Math.sqrt(diffX * diffX + diffY * diffY);
+}
+
+function getIncludePositions() {
+    return $('#includePositions').is(":checked");
+}
+
+function getIncludeWeights() {
+    return $('#includeWeights').is(":checked");
 }
 
 function outputTestCase() {
@@ -144,6 +167,8 @@ function outputTestCase() {
         }
     }
     for (var i = 0; i < edges.length; i++) {
-        $('#case').append(edges[i].node1 + " " + edges[i].node2 + "<br>");
+        var edge = edges[i];
+        var weightAttr = includeWeights ? " " + edge.weight : "";
+        $('#case').append(edge.node1 + " " + edge.node2 + weightAttr + "<br>");
     }
 }
