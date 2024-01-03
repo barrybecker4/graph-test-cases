@@ -55,7 +55,7 @@ $('#generate').click(function() {
     nodes = [];
     isDirected = false;
     numNodes = $('#numNodes').val();
-    if (!numNodes || numNodes<=0)
+    if (!numNodes || numNodes <= 0)
         numNodes = 5;
 
     var graphType = $("input[type='radio'][name='gtype']:checked").val();
@@ -168,7 +168,12 @@ function outputTestCase() {
     }
     for (var i = 0; i < edges.length; i++) {
         var edge = edges[i];
-        var weightAttr = includeWeights ? " " + edge.weight : "";
+        var weightAttr = includeWeights ? " " + round(edge.weight, 2) : "";
         $('#case').append(edge.node1 + " " + edge.node2 + weightAttr + "<br>");
     }
+}
+
+function round(value, decimals) {
+    var scale = Math.pow(10, decimals)
+    return Math.round(value * scale) / scale;
 }
