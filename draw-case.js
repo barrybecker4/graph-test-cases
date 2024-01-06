@@ -43,9 +43,7 @@ $('#includeWeights').click(function() {
 });
 
 $('#generate').click(function() {
-    var graph = $('#graph');
     jsPlumb.empty("graph");
-    graph.html('');
 
     edges = [];
     nodes = [];
@@ -58,7 +56,7 @@ $('#generate').click(function() {
     graphConfig.isDirected = graphType == 0 ? false : true;
 
     var graphLayoutSelection = $("input[type='radio'][name='layout']:checked").val();
-    graphConfig.graphLayout = graphLayoutSelection == 0 ? 'radial' : 'grid';
+    graphConfig.layout = graphLayoutSelection == 0 ? 'radial' : 'grid';
 
     graphConfig.includePositions = getIncludePositions();
     graphConfig.includeWeights = getIncludeWeights();
@@ -66,23 +64,56 @@ $('#generate').click(function() {
     var start = 0;
     var end = parseInt(start) + parseInt(graphConfig.numNodes) - 1;
 
+    if (graphConfig.layout == 'radial') createRadialLayout(start, end);
+    else createGridLayout(start, end);
+
+    outputTestCase();
+});
+
+function createRadialLayout(start, end) {
+    var graph = $('#graph');
+    graph.html('');
     var grWidth = graph.width();
     var grHeight = graph.height();
+
     var radius = grWidth / 2 - 25;
     var grX = graph.position().left;
     var grY = graph.position().top;
     var angleDiff = Math.PI * 2 / graphConfig.numNodes;
     for (i = start; i <= end; i++) {
-        var xPos = Math.round(grX + radius + Math.cos(i*angleDiff) * radius / 1.4);
-        var yPos = Math.round(grY + radius + Math.sin(i*angleDiff) * radius / 1.4);
-        var newNode = '<div style="left:' + xPos +
-          'px; top:' + yPos + 'px;" id="node' + i +
-          '" class="node" draggable="true" ondragstart="drag_start(event)" node="' + i + '">' + i + '</div>';
-        nodes.push([xPos, yPos]);
-        graph.append(newNode);
+        var angle = i * angleDiff
+        var xPos = Math.round(grX + radius + Math.cos(angle) * radius / 1.4);
+        var yPos = Math.round(grY + radius + Math.sin(angle) * radius / 1.4);
+        graph.append(createNode(i, xPos, yPos));
     }
-    outputTestCase();
-});
+}
+
+function createGridLayout(start, end) {
+    var graph = $('#graph');
+    graph.html('');
+    var grWidth = graph.width();
+    var grHeight = graph.height();
+
+    var nodesOnEdge = Math.ceil(Math.sqrt(graphConfig.numNodes));
+    var increment = (grWidth - 10) / nodesOnEdge;
+    var grX = graph.position().left;
+    var grY = graph.position().top;
+    for (i = start; i <= end; i++) {
+        var row = Math.floor(i / nodesOnEdge);
+        var col = i % nodesOnEdge;
+        var xPos = grX + 10 + col * increment;
+        var yPos = grY + 10 + row * increment;
+        graph.append(createNode(i, xPos, yPos));
+    }
+}
+
+function createNode(i, xPos, yPos) {
+    var newNode = '<div style="left:' + xPos +
+              'px; top:' + yPos + 'px;" id="node' + i +
+              '" class="node" draggable="true" ondragstart="drag_start(event)" node="' + i + '">' + i + '</div>';
+    nodes.push([xPos, yPos]);
+    return newNode;
+}
 
 $(document).on('click', '.node', function() {
     if (!bound) {

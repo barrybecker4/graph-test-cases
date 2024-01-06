@@ -1,8 +1,8 @@
 class GraphConfiguration {
-    constructor(numNodes, isDirected, graphLayout, includePositions, includeWeights) {
+    constructor(numNodes, isDirected, layout, includePositions, includeWeights) {
         this.numNodes = numNodes;
         this.isDirected = isDirected;
-        this.graphLayout = graphLayout;
+        this.layout = layout;
         this.includePositions = includePositions;
         this.includeWeights = includeWeights;
     }
