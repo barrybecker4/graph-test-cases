@@ -20,24 +20,31 @@
       <div id="inputarea">
           <table>
               <tr>
-                  <th>Num nodes: </th>
+                  <th>Num nodes:</th>
                   <td><input type="number" id="numNodes" min="1" max="30" value="5"></td>
               </tr>
-            <tr>
-                  <th>Graph type: </th>
+              <tr>
+                  <th>Graph type:</th>
                   <td>
                       <input type="radio" name="gtype" value="0" checked> Undirected<br>
-                    <input type="radio" name="gtype" value="1"> Directed
+                      <input type="radio" name="gtype" value="1"> Directed
                   </td>
               </tr>
-            <tr>
-                <th>Include node positions: </th>
-                <td>
-                    <input type="checkbox" id="includePositions">
-                </td>
-            </tr>
               <tr>
-                  <th>Include edge weights: </th>
+                  <th>Layout:</th>
+                  <td>
+                      <input type="radio" name="layout" value="0" checked> Radial<br>
+                      <input type="radio" name="layout" value="1"> Grid
+                  </td>
+              </tr>
+              <tr>
+                  <th>Include node positions:</th>
+                  <td>
+                      <input type="checkbox" id="includePositions">
+                  </td>
+              </tr>
+              <tr>
+                  <th>Include edge weights:</th>
                   <td>
                       <input type="checkbox" id="includeWeights">
                   </td>
@@ -47,12 +54,12 @@
                   <td><input type="button" id="output" value="Generate Case"></td>
               </tr>
           </table>
-        <br>
+          <br>
 
       </div>
 
       <div id="grapharea">
-        <span id="chooseTarget"style="position: absolute; color:gray; display: none;">Choose target node</span>
+          <span id="chooseTarget" style="position: absolute; color:gray; display: none;">Choose target node</span>
           <div id="graph" ondragover="drag_over(event)" ondrop="drop(event)"></div>
       </div>
 
@@ -64,5 +71,6 @@
     <link href="style.css" rel="stylesheet">
     <script   src="https://code.jquery.com/jquery-2.2.4.min.js"   integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="   crossorigin="anonymous"></script>
   <script src="jsPlumb-2.1.2.js"></script>
+  <script src="GraphConfiguration.js"></script>
   <script src="draw-case.js"></script>
 </html>

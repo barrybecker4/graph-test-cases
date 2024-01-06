@@ -26,23 +26,19 @@ function drag_over(event) {
     return false;
 }
 
-
-var numNodes = 5;
-var base = 0;
-var edges = [];
-var isDirected = false;
-var includePositions = false;
-var includeWeights = false;
+var graphConfig = new GraphConfiguration(5, false, 'radial', false, false);
 var bound = null;
 var draggedNode = -1;
+var nodes = [];
+var edges = [];
 
 $('#includePositions').click(function() {
-   includePositions = getIncludePositions();
+   graphConfig.includePositions = getIncludePositions();
    outputTestCase();
 });
 
 $('#includeWeights').click(function() {
-   includeWeights = getIncludeWeights();
+   graphConfig.includeWeights = getIncludeWeights();
    outputTestCase();
 });
 
@@ -53,26 +49,29 @@ $('#generate').click(function() {
 
     edges = [];
     nodes = [];
-    isDirected = false;
-    numNodes = $('#numNodes').val();
-    if (!numNodes || numNodes <= 0)
-        numNodes = 5;
+    graphConfig.isDirected = false;
+    graphConfig.numNodes = $('#numNodes').val();
+    if (!graphConfig.numNodes || graphConfig.numNodes <= 0)
+        graphConfig.numNodes = 5;
 
     var graphType = $("input[type='radio'][name='gtype']:checked").val();
-    isDirected = graphType == 0 ? false : true;
+    graphConfig.isDirected = graphType == 0 ? false : true;
 
-    includePositions = getIncludePositions();
-    includeWeights = getIncludeWeights();
+    var graphLayoutSelection = $("input[type='radio'][name='layout']:checked").val();
+    graphConfig.graphLayout = graphLayoutSelection == 0 ? 'radial' : 'grid';
+
+    graphConfig.includePositions = getIncludePositions();
+    graphConfig.includeWeights = getIncludeWeights();
 
     var start = 0;
-    var end = parseInt(start) + parseInt(numNodes) - 1;
+    var end = parseInt(start) + parseInt(graphConfig.numNodes) - 1;
 
     var grWidth = graph.width();
     var grHeight = graph.height();
     var radius = grWidth / 2 - 25;
     var grX = graph.position().left;
     var grY = graph.position().top;
-    var angleDiff = Math.PI * 2 / numNodes;
+    var angleDiff = Math.PI * 2 / graphConfig.numNodes;
     for (i = start; i <= end; i++) {
         var xPos = Math.round(grX + radius + Math.cos(i*angleDiff) * radius / 1.4);
         var yPos = Math.round(grY + radius + Math.sin(i*angleDiff) * radius / 1.4);
@@ -122,7 +121,7 @@ var addOrRemoveEdge = function(node1, node2, elem1, elem2) {
     }
 
     var connector = 'Straight';
-    if (isDirected) { // draw edge as curve
+    if (graphConfig.isDirected) { // draw edge as curve
         connector = ['StateMachine', { curviness:20 }];
         if (node2  < node1)
             connector = ['StateMachine', { curviness:-20 }];
@@ -133,7 +132,7 @@ var addOrRemoveEdge = function(node1, node2, elem1, elem2) {
         target:elem2,
         connector: connector,
         anchor:'Center',
-        overlays: isDirected ? [["Arrow" , { width:12, length:12, location:0.67 }]] : [],
+        overlays: graphConfig.isDirected ? [["Arrow" , { width:12, length:12, location:0.67 }]] : [],
     });
     edges.push({node1 : node1, node2: node2, conn: connection, weight: distance(+node1, +node2)});
     outputTestCase(); // update the output testCases
@@ -159,16 +158,16 @@ function getIncludeWeights() {
 function outputTestCase() {
     $('#case').html('');
     $('#case').append("<h4>Input: </h4>")
-    $('#case').append(numNodes + " " + edges.length + " " + includePositions + "<br>");
+    $('#case').append(graphConfig.numNodes + " " + edges.length + " " + graphConfig.includePositions + "<br>");
 
-    if (includePositions) {
+    if (graphConfig.includePositions) {
         for (var i = 0; i < nodes.length; i++) {
            $('#case').append(nodes[i][0] + " " + nodes[i][1] + "<br>");
         }
     }
     for (var i = 0; i < edges.length; i++) {
         var edge = edges[i];
-        var weightAttr = includeWeights ? " " + round(edge.weight, 2) : "";
+        var weightAttr = graphConfig.includeWeights ? " " + round(edge.weight, 2) : "";
         $('#case').append(edge.node1 + " " + edge.node2 + weightAttr + "<br>");
     }
 }
