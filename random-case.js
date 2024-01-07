@@ -34,6 +34,7 @@ $('#generate-case').click(function(){
     possibleEdges = [];
 
     // Hmm.. this is expensive. Instead of doing this, just randomly add edges - at least if num edges small compared to max
+    // nodes that are closer together should be more likely to have edges.
     for (i = 0; i < numNodes; i++) {
         for (j = i + 1; j < numNodes; j++) {
             var v1 = i;

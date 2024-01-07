@@ -1,8 +1,4 @@
 // Features to add
-// - refactor out to separate encapsulated file
-//   - separate file for UI
-//   - separate file for graph
-//   - separate file for layouts
 // - use poisson distribution to avoid overlap
 // - add param for size of node circle
 // - automatically don't show labels if more than 500 nodes

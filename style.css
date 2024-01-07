@@ -1,91 +1,97 @@
-html, body{
-         height: 100%;
-     }
-     #sidenavCont {
-        height: 100%;
-        width: 20%;
-        border-right: 4px solid black;
-        text-align: center;        
-        background-color: #f1f1f1;
-        overflow: auto;
-        position: fixed;
-        margin: 0;
-        padding: 0;
-    }
-     #main {
-         position: absolute;
-         margin-left: 20%;
-         padding-left: 2%;
-         padding-right: 2%;
-         width: 56%;
-         height: 100%;
-         border-right: 4px solid #000000;
-     }
-     #inputarea {
-     }
-     #grapharea {
-     }
+html, body {
+    height: 100%;
+}
 
-     #case {
-         padding-top: 60px;
-         margin-left: 83%;
-         font-size: 20px;
-     }
-     #output {
-         display: none;
-     }
-     #graph {
-        width: 100%;
-        height: 800px;
-        border: 1px solid black;
-     }
-     .node {
-        position:  absolute;
-        width: 30px;
-        height: 30px;
-        cursor: move;
-        border: 1px solid black;
-        border-radius: 50px;
-        text-align: center;
-        vertical-align: middle;
-        font-size: 20px;
-        background-color: white;
-        z-index: 10;
-     }
+#sidenavCont {
+    height: 100%;
+    width: 20%;
+    border-right: 4px solid black;
+    text-align: center;
+    background-color: #f1f1f1;
+    overflow: auto;
+    position: fixed;
+    margin: 0;
+    padding: 0;
+}
+#main {
+     position: absolute;
+     margin-left: 20%;
+     padding-left: 2%;
+     padding-right: 2%;
+     width: 56%;
+     height: 100%;
+     border-right: 4px solid #000000;
+ }
 
-    .node:hover {
-        border-color: red !important;
-        border-width: 2px !important;
-    }
+#inputarea {
+}
+#inputarea table th {
+    text-align: right;
+}
 
-    #footer {
-        position: absolute;
-        bottom: 0px;
-        width: 100%;
-        background-color:gray;
-    }
-   
-    #sidenav {
-        list-style-type: none;
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        
-    }
+#grapharea {
+}
 
-    #sidenav li a {
-        display: block;
-        color: #000;
-        padding: 8px 0 8px 16px;
-        text-decoration: none;
-    }
+#case {
+    padding-top: 60px;
+    margin-left: 83%;
+    font-size: 20px;
+}
+#output {
+    display: none;
+}
+#graph {
+    width: 100%;
+    height: 800px;
+    border: 1px solid black;
+}
+.node {
+    position:  absolute;
+    width: 30px;
+    height: 30px;
+    cursor: move;
+    border: 1px solid black;
+    border-radius: 50px;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 20px;
+    background-color: white;
+    z-index: 10;
+}
 
-    #sidenav li a.active {
-        background-color: #999;
-        color: white;
-    }
+.node:hover {
+    border-color: red !important;
+    border-width: 2px !important;
+}
 
-    #sidenav li a:hover:not(.active) {
-        background-color: #555;
-        color: white;
-    }
+#footer {
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    background-color:gray;
+}
+
+#sidenav {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+
+}
+
+#sidenav li a {
+    display: block;
+    color: #000;
+    padding: 8px 0 8px 16px;
+    text-decoration: none;
+}
+
+#sidenav li a.active {
+    background-color: #999;
+    color: white;
+}
+
+#sidenav li a:hover:not(.active) {
+    background-color: #555;
+    color: white;
+}
