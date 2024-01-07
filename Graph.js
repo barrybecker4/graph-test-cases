@@ -85,6 +85,7 @@ class Graph {
 
     calculateWeight(node1, node2) {
         switch (this.config.weightType) {
+            case 'none': return 0;
             case 'distance': return distance(node1, node2);
             case 'jittered_distance': return jittered_distance(node1, node2);
             case 'random': return round(Math.random() * 100, 1);
@@ -195,7 +196,7 @@ class Graph {
         }
         for (var i = 0; i < this.edges.length; i++) {
             var edge = this.edges[i];
-            var weightAttr = this.config.includeWeights ? " " + round(edge.weight, 2) : "";
+            var weightAttr = this.config.weightType != 'none' ? " " + round(edge.weight, 2) : "";
             outputElement.append(edge.node1 + " " + edge.node2 + weightAttr + "<br>");
         }
     }

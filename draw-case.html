@@ -19,18 +19,20 @@
   <div id="main">
       <div id="inputarea">
           <table>
-              <tr>
+              <tr title="Number of nodes to generate">
                   <th>Num nodes:</th>
-                  <td><input type="number" id="numNodes" min="1" max="30" value="5"></td>
+                  <td>
+                      <input type="number" id="numNodes" min="1" max="30" value="5">
+                  </td>
               </tr>
               <tr>
-                  <th>Graph type:</th>
-                  <td>
+                  <th title="whether the graph is directed or undirected">Graph type:</th>
+                  <td title="Undirected means edges are bidirectional">
                       <input type="radio" name="gtype" value="0" checked> Undirected&nbsp;
                       <input type="radio" name="gtype" value="1"> Directed
                   </td>
               </tr>
-              <tr>
+              <tr title="Style to layout the generated nodes in">
                   <th>Layout:</th>
                   <td>
                       <input type="radio" name="layoutType" value="0" checked> Radial&nbsp;
@@ -39,23 +41,18 @@
                   </td>
               </tr>
               <tr>
-                  <th>Weighs:</th>
+                  <th title="Type of edge weighting to use">Weights:</th>
                   <td>
-                      <input type="radio" name="weightType" value="0" checked> Distance&nbsp;
-                      <input type="radio" name="weightType" value="1"> Jittered Distance&nbsp;
-                      <input type="radio" name="weightType" value="2"> Random&nbsp;
+                      <input type="radio" name="weightType" value="0" title="No edge weights" checked> None&nbsp;
+                      <input type="radio" name="weightType" value="1" checked> Distance&nbsp;
+                      <input type="radio" name="weightType" value="2" title="Proportional to distance with gaussian peturbation"> Jittered Distance&nbsp;
+                      <input type="radio" name="weightType" value="3"> Random&nbsp;
                   </td>
               </tr>
               <tr>
                   <th>Include node positions:</th>
                   <td>
                       <input type="checkbox" id="includePositions" checked>
-                  </td>
-              </tr>
-              <tr>
-                  <th>Include edge weights:</th>
-                  <td>
-                      <input type="checkbox" id="includeWeights" checked>
                   </td>
               </tr>
               <tr>
