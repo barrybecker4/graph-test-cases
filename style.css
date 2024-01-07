@@ -58,6 +58,11 @@ html, body {
     background-color: white;
     z-index: 10;
 }
+.edge {
+    stroke-width: 2,
+    color: '#567567',
+    /* stroke: "rgba(86, 117, 103, 0.5)",*/
+}
 
 .node:hover {
     border-color: red !important;
@@ -76,7 +81,6 @@ html, body {
     margin: 0;
     padding: 0;
     width: 100%;
-
 }
 
 #sidenav li a {

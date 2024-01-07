@@ -6,7 +6,7 @@
 // - automatically don't show labels if more than 500 nodes
 // - use bucketing to avoid N^2 edges
 
-var graphConfig = new GraphConfiguration(5, false, 'radial', false, 'distance');
+var graphConfig = new GraphConfiguration(5, false, 'radial', false, 'distance', 0);
 var graph = new Graph(graphConfig);
 
 $('#includePositions').click(function() {
@@ -22,6 +22,7 @@ $('#generate').click(function() {
     graphConfig.layoutType = getLayoutType();
     graphConfig.weightType = getWeightType();
     graphConfig.includePositions = getIncludePositions();
+    graphConfig.autoEdgeDensity = getAutoEdgeDensity()
 
     graph.generate();
     graph.outputTestCase();
@@ -34,14 +35,14 @@ function getNumNodes() {
 
 function getGraphType() {
     var graphType = $("input[type='radio'][name='gtype']:checked").val();
-    return graphType == 0 ? false : true;
+    return graphType == 1 ? false : true;
 }
 
 function getLayoutType() {
     var layoutSelection = $("input[type='radio'][name='layoutType']:checked").val();
     switch (+layoutSelection) {
-        case 0: return 'radial';
-        case 1: return 'grid';
+        case 0: return 'grid';
+        case 1: return 'radial';
         case 2: return 'random';
         default: throw new Error("Unexpected layout selection: " + layoutSelection);
     }
@@ -58,6 +59,11 @@ function getWeightType() {
 }
 
 function getIncludePositions() {
-    return $('#includePositions').is(":checked");
+    var density = $('#includePositions').is(":checked");
+    return (density <= 0) ? 0 : density;
+}
+
+function getAutoEdgeDensity() {
+    return $('#autoEdgeDensity').val();
 }
 

@@ -28,15 +28,15 @@
               <tr>
                   <th title="whether the graph is directed or undirected">Graph type:</th>
                   <td title="Undirected means edges are bidirectional">
-                      <input type="radio" name="gtype" value="0" checked> Undirected&nbsp;
-                      <input type="radio" name="gtype" value="1"> Directed
+                      <input type="radio" name="gtype" value="0" checked> Directed&nbsp;
+                      <input type="radio" name="gtype" value="1" > Undirected
                   </td>
               </tr>
               <tr title="Style to layout the generated nodes in">
                   <th>Layout:</th>
                   <td>
-                      <input type="radio" name="layoutType" value="0" checked> Radial&nbsp;
-                      <input type="radio" name="layoutType" value="1"> Grid&nbsp;
+                      <input type="radio" name="layoutType" value="0" checked> Grid&nbsp;
+                      <input type="radio" name="layoutType" value="1" > Radial&nbsp;
                       <input type="radio" name="layoutType" value="2"> Random&nbsp;
                   </td>
               </tr>
@@ -47,6 +47,12 @@
                       <input type="radio" name="weightType" value="1" checked> Distance&nbsp;
                       <input type="radio" name="weightType" value="2" title="Proportional to distance with gaussian peturbation"> Jittered Distance&nbsp;
                       <input type="radio" name="weightType" value="3"> Random&nbsp;
+                  </td>
+              </tr>
+              <tr title="Allows auto generation of edges - before manually adding and removing">
+                  <th>Auto-edge density:</th>
+                  <td title="Af value between 0 and 1 corresponding to the probability of an edge (scaled by distance)">
+                      <input type="number" id="autoEdgeDensity" min="0" max="1" step="0.01" value="0">
                   </td>
               </tr>
               <tr>

@@ -12,12 +12,12 @@ class Graph {
             if (!self.bound) {
                 self.bound = $(this);
                 $(this).css('border-color','blue');
-                $(this).css('border-width','4px');
+                $(this).css('border-width','3px');
                 $('#chooseTarget').show();
             } else {
                 var node1 = self.bound.attr('node');
                 var node2 = $(this).attr('node');
-                var added = self.addOrRemoveEdge(node1, node2, self.bound, $(this));
+                var added = self.addOrRemoveEdge(node1, node2);
 
                 self.bound.css('border-color', 'black');
                 self.bound.css('border-width','1px');
@@ -35,13 +35,36 @@ class Graph {
         this.nodes = [];
 
         switch(this.config.layoutType) {
-            case 'radial': this.createRadialLayout(start, end); break;
             case 'grid': this.createGridLayout(start, end); break;
+            case 'radial': this.createRadialLayout(start, end); break;
             default: this.createRandomLayout(start, end); break;
+        }
+        this.addAutoEdges();
+    }
+
+    addAutoEdges() {
+        var numNodes = this.config.numNodes;
+        var width = $("#graph").width();
+        console.log("width = " + width);
+
+        // This is expensive. Consider binning for large graphs
+        for (var i = 0; i < numNodes; i++) {
+            for (var j = i + 1; j < numNodes; j++) {
+                var factor = (width - distance(this.nodes[i], this.nodes[j])) / width;
+                var thresh = this.config.autoEdgeDensity * factor * factor;
+                if (Math.random() <= thresh) {
+                    this.addOrRemoveEdge(i, j);
+                    if (this.config.isDirected) {
+                        this.addOrRemoveEdge(j, i);
+                    }
+                }
+            }
         }
     }
 
-    addOrRemoveEdge(node1, node2, elem1, elem2) {
+    addOrRemoveEdge(node1, node2) {
+        var elem1 = $('#node' + node1);
+        var elem2 = $('#node' + node2);
         if (node1 == node2 && !this.config.isDirected)
             return false;
 
@@ -62,14 +85,19 @@ class Graph {
         var connector = 'Straight';
         if (this.config.isDirected) { // draw edge as curve
             connector = ['StateMachine', { curviness:20 }];
-            if (node2  < node1)
+            if (node2 < node1)
                 connector = ['StateMachine', { curviness:-20 }];
         }
 
         var connection = jsPlumb.connect({
-            source:elem1,
-            target:elem2,
+            source: elem1,
+            target: elem2,
             connector: connector,
+            cssClass: "edge",
+//          paintStyle: {  // this does not work, unfortunately
+//                strokeWidth: 4,
+//                stroke: "rgba(86, 117, 103, 0.5)",
+//          },
             anchor:'Center',
             overlays: this.config.isDirected ? [["Arrow" , { width:12, length:12, location:0.67 }]] : [],
         });
