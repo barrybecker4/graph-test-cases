@@ -1,13 +1,13 @@
 // Features to add
-// - use poisson distribution to avoid overlap
-// - add param for size of node circle
-// - automatically don't show labels if more than 500 nodes
 // - combine random-case into draw case
 // - random integer, or distance weights
 // - add random edges
+// - use poisson distribution to avoid overlap
+// - add param for size of node circle
+// - automatically don't show labels if more than 500 nodes
 // - use bucketing to avoid N^2 edges
 
-var graphConfig = new GraphConfiguration(5, false, 'radial', false, false);
+var graphConfig = new GraphConfiguration(5, false, 'radial', false, false, 'distance');
 var graph = new Graph(graphConfig);
 
 $('#includePositions').click(function() {
@@ -23,27 +23,46 @@ $('#includeWeights').click(function() {
 $('#generate').click(function() {
     jsPlumb.empty("graph");
 
-    graphConfig.numNodes = $('#numNodes').val();
-    if (!graphConfig.numNodes || graphConfig.numNodes <= 0)
-        graphConfig.numNodes = 5;
-
-    var graphType = $("input[type='radio'][name='gtype']:checked").val();
-    graphConfig.isDirected = graphType == 0 ? false : true;
-
-    var graphLayoutSelection = $("input[type='radio'][name='layout']:checked").val();
-    switch (+graphLayoutSelection) {
-        case 0: graphConfig.layout = 'radial'; break;
-        case 1: graphConfig.layout = 'grid'; break;
-        case 2: graphConfig.layout = 'random'; break;
-        default: throw new Error("Unexpected layout selection: " + graphLayoutSelection);
-    }
-
+    graphConfig.numNodes = getNumNodes();
+    graphConfig.isDirected = getGraphType();
+    graphConfig.layoutType = getLayoutType();
+    graphConfig.weightType = getWeightType();
     graphConfig.includePositions = getIncludePositions();
     graphConfig.includeWeights = getIncludeWeights();
 
     graph.generate();
     graph.outputTestCase();
 });
+
+function getNumNodes() {
+    var num = $('#numNodes').val();
+    return (!num || num <= 0) ? 5 : num;
+}
+
+function getGraphType() {
+    var graphType = $("input[type='radio'][name='gtype']:checked").val();
+    return graphType == 0 ? false : true;
+}
+
+function getLayoutType() {
+    var layoutSelection = $("input[type='radio'][name='layoutType']:checked").val();
+    switch (+layoutSelection) {
+        case 0: return 'radial';
+        case 1: return 'grid';
+        case 2: return 'random';
+        default: throw new Error("Unexpected layout selection: " + layoutSelection);
+    }
+}
+
+function getWeightType() {
+    var weightSelection = $("input[type='radio'][name='weightType']:checked").val();
+    switch (+weightSelection) {
+        case 0: return 'distance';
+        case 1: return 'jittered_distance';
+        case 2: return 'random';
+        default: throw new Error("Unexpected weight selection: " + weightSelection);
+    }
+}
 
 function getIncludePositions() {
     return $('#includePositions').is(":checked");

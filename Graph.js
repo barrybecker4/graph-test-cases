@@ -34,7 +34,7 @@ class Graph {
         this.edges = [];
         this.nodes = [];
 
-        switch(this.config.layout) {
+        switch(this.config.layoutType) {
             case 'radial': this.createRadialLayout(start, end); break;
             case 'grid': this.createGridLayout(start, end); break;
             default: this.createRandomLayout(start, end); break;
@@ -73,9 +73,22 @@ class Graph {
             anchor:'Center',
             overlays: this.config.isDirected ? [["Arrow" , { width:12, length:12, location:0.67 }]] : [],
         });
-        this.edges.push({node1 : node1, node2: node2, conn: connection, weight: distance(this.nodes[+node1], this.nodes[+node2])});
+        this.edges.push({
+            node1: node1,
+            node2: node2,
+            conn: connection,
+            weight: this.calculateWeight(this.nodes[+node1], this.nodes[+node2])
+        });
         this.outputTestCase();
         return true;
+    }
+
+    calculateWeight(node1, node2) {
+        switch (this.config.weightType) {
+            case 'distance': return distance(node1, node2);
+            case 'jittered_distance': return jittered_distance(node1, node2);
+            case 'random': return round(Math.random() * 100, 1);
+        }
     }
 
     drag_start(event) {

@@ -13,8 +13,22 @@ function distance(pt1, pt2) {
    return Math.sqrt(diffX * diffX + diffY * diffY);
 }
 
+function jittered_distance(pt1, pt2) {
+   var dist = distance(pt1, pt2);
+   return gaussianRandom(1.0, 0.2) * dist;
+}
+
 function initGraphUI() {
     var graphUI = $('#graph');
     graphUI.html('');
     return graphUI;
+}
+
+// Standard Normal variate using Box-Muller transform.
+function gaussianRandom(mean = 0, stdev = 1) {
+    const u = 1 - Math.random(); // Converting [0, 1) to (0, 1]
+    const v = Math.random();
+    const z = Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v );
+    // Transform to the desired mean and standard deviation:
+    return z * stdev + mean;
 }
