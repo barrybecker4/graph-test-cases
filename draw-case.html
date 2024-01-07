@@ -41,13 +41,13 @@
               <tr>
                   <th>Include node positions:</th>
                   <td>
-                      <input type="checkbox" id="includePositions">
+                      <input type="checkbox" id="includePositions" checked>
                   </td>
               </tr>
               <tr>
                   <th>Include edge weights:</th>
                   <td>
-                      <input type="checkbox" id="includeWeights">
+                      <input type="checkbox" id="includeWeights" checked>
                   </td>
               </tr>
               <tr>
@@ -61,7 +61,7 @@
 
       <div id="grapharea">
           <span id="chooseTarget" style="position: absolute; color:gray; display: none;">Choose target node</span>
-          <div id="graph" ondragover="drag_over(event)" ondrop="drop(event)"></div>
+          <div id="graph" ondragover="graph.drag_over(event)" ondrop="graph.drop(event)"></div>
       </div>
 
   </div>
@@ -74,5 +74,6 @@
   <script src="jsPlumb-2.1.2.js"></script>
   <script src="utils.js"></script>
   <script src="GraphConfiguration.js"></script>
+  <script src="Graph.js"></script>
   <script src="draw-case.js"></script>
 </html>

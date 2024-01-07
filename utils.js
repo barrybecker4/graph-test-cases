@@ -12,3 +12,9 @@ function distance(pt1, pt2) {
    var diffY = pt1[1] - pt2[1];
    return Math.sqrt(diffX * diffX + diffY * diffY);
 }
+
+function initGraphUI() {
+    var graphUI = $('#graph');
+    graphUI.html('');
+    return graphUI;
+}
