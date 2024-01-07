@@ -1,4 +1,8 @@
 // Features to add
+// - refactor out to separate encapsulated file
+//   - separate file for UI
+//   - separate file for graph
+//   - separate file for layouts
 // - use poisson distribution to avoid overlap
 // - add param for size of node circle
 // - automatically don't show labels if more than 500 nodes
@@ -6,10 +10,6 @@
 // - random integer, or distance weights
 // - add random edges
 // - use bucketing to avoid N^2 edges
-// - refactor out to separate encapsulated filed
-//   - separate file for UI
-//   - separate file for graph
-//   - separate file for layouts
 
 function drag_start(event) {
     draggedNode = +event.target.id.substring('node'.length);
@@ -203,17 +203,9 @@ var addOrRemoveEdge = function(node1, node2, elem1, elem2) {
         anchor:'Center',
         overlays: graphConfig.isDirected ? [["Arrow" , { width:12, length:12, location:0.67 }]] : [],
     });
-    edges.push({node1 : node1, node2: node2, conn: connection, weight: distance(+node1, +node2)});
-    outputTestCase(); // update the output testCases
+    edges.push({node1 : node1, node2: node2, conn: connection, weight: distance(nodes[+node1], nodes[+node2])});
+    outputTestCase();
     return true;
-}
-
-function distance(node1, node2) {
-   var pt1 = nodes[node1];
-   var pt2 = nodes[node2];
-   var diffX = pt1[0] - pt2[0];
-   var diffY = pt1[1] - pt2[1];
-   return Math.sqrt(diffX * diffX + diffY * diffY);
 }
 
 function getIncludePositions() {
@@ -226,7 +218,7 @@ function getIncludeWeights() {
 
 function outputTestCase() {
     $('#case').html('');
-    $('#case').append("<h4>Input: </h4>")
+    $('#case').append("<h4>Result: </h4>")
     $('#case').append(graphConfig.numNodes + " " + edges.length + " " + graphConfig.includePositions + "<br>");
 
     if (graphConfig.includePositions) {
@@ -239,9 +231,4 @@ function outputTestCase() {
         var weightAttr = graphConfig.includeWeights ? " " + round(edge.weight, 2) : "";
         $('#case').append(edge.node1 + " " + edge.node2 + weightAttr + "<br>");
     }
-}
-
-function round(value, decimals) {
-    var scale = Math.pow(10, decimals)
-    return Math.round(value * scale) / scale;
 }

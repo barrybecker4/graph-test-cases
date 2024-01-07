@@ -80,7 +80,7 @@ function getAndRemoveRandomEdge()
 function outputTestCase()
 {
     $('#case').html('');
-    $('#case').append("<h4>Input: </h4>")
+    $('#case').append("<h4>Result: </h4>")
     $('#case').append(numNodes + " " + numEdges + "<br>");
 
     for(i = 0; i<numEdges; i++)

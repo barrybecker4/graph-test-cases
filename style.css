@@ -27,19 +27,19 @@ html, body{
      }
 
      #case {
-         padding-top: 80px; 
-         margin-left: 85%;
-         font-size: 22px;
+         padding-top: 60px;
+         margin-left: 83%;
+         font-size: 20px;
      }
      #output {
          display: none;
      }
-    #graph {
+     #graph {
         width: 100%;
         height: 800px;
         border: 1px solid black;
-    }
-    .node {
+     }
+     .node {
         position:  absolute;
         width: 30px;
         height: 30px;
@@ -51,7 +51,7 @@ html, body{
         font-size: 20px;
         background-color: white;
         z-index: 10;
-    }
+     }
 
     .node:hover {
         border-color: red !important;
