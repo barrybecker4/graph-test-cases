@@ -35,7 +35,7 @@ $('#generate-case').click(function(){
 
     // Hmm.. this is expensive. Instead of doing this, just randomly add edges - at least if num edges small compared to max
     for (i = 0; i < numNodes; i++) {
-        for (j = i+1; j < numNodes; j++) {
+        for (j = i + 1; j < numNodes; j++) {
             var v1 = i;
             var v2 = j;
             
@@ -81,7 +81,7 @@ function outputTestCase()
 {
     $('#case').html('');
     $('#case').append("<h4>Input: </h4>")
-    $('#case').append(numNodes+" "+numEdges+"<br>");
+    $('#case').append(numNodes + " " + numEdges + "<br>");
 
     for(i = 0; i<numEdges; i++)
     {

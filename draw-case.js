@@ -1,3 +1,16 @@
+// Features to add
+// - use poisson distribution to avoid overlap
+// - add param for size of node circle
+// - automatically don't show labels if more than 500 nodes
+// - combine random-case into draw case
+// - random integer, or distance weights
+// - add random edges
+// - use bucketing to avoid N^2 edges
+// - refactor out to separate encapsulated filed
+//   - separate file for UI
+//   - separate file for graph
+//   - separate file for layouts
+
 function drag_start(event) {
     draggedNode = +event.target.id.substring('node'.length);
     var style = window.getComputedStyle(event.target, null);
@@ -56,7 +69,12 @@ $('#generate').click(function() {
     graphConfig.isDirected = graphType == 0 ? false : true;
 
     var graphLayoutSelection = $("input[type='radio'][name='layout']:checked").val();
-    graphConfig.layout = graphLayoutSelection == 0 ? 'radial' : 'grid';
+    switch (+graphLayoutSelection) {
+        case 0: graphConfig.layout = 'radial'; break;
+        case 1: graphConfig.layout = 'grid'; break;
+        case 2: graphConfig.layout = 'random'; break;
+        default: throw new Error("Unexpected layout selection: " + graphLayoutSelection);
+    }
 
     graphConfig.includePositions = getIncludePositions();
     graphConfig.includeWeights = getIncludeWeights();
@@ -64,8 +82,11 @@ $('#generate').click(function() {
     var start = 0;
     var end = parseInt(start) + parseInt(graphConfig.numNodes) - 1;
 
-    if (graphConfig.layout == 'radial') createRadialLayout(start, end);
-    else createGridLayout(start, end);
+    switch(graphConfig.layout) {
+        case 'radial': createRadialLayout(start, end); break;
+        case 'grid': createGridLayout(start, end); break;
+        default: createRandomLayout(start, end); break;
+    }
 
     outputTestCase();
 });
@@ -91,18 +112,35 @@ function createRadialLayout(start, end) {
 function createGridLayout(start, end) {
     var graph = $('#graph');
     graph.html('');
-    var grWidth = graph.width();
+    var margin = 10;
+    var grWidth = graph.width() - margin;
     var grHeight = graph.height();
 
     var nodesOnEdge = Math.ceil(Math.sqrt(graphConfig.numNodes));
-    var increment = (grWidth - 10) / nodesOnEdge;
+    var increment = (grWidth - margin) / nodesOnEdge;
     var grX = graph.position().left;
     var grY = graph.position().top;
     for (i = start; i <= end; i++) {
         var row = Math.floor(i / nodesOnEdge);
         var col = i % nodesOnEdge;
-        var xPos = grX + 10 + col * increment;
-        var yPos = grY + 10 + row * increment;
+        var xPos = grX + margin + col * increment;
+        var yPos = grY + margin + row * increment;
+        graph.append(createNode(i, xPos, yPos));
+    }
+}
+
+function createRandomLayout(start, end) {
+    var graph = $('#graph');
+    graph.html('');
+    var margin = 10;
+    var grWidth = graph.width() - 3 * margin;
+    var grHeight = graph.height() - 3 * margin;
+
+    var grX = graph.position().left;
+    var grY = graph.position().top;
+    for (i = start; i <= end; i++) {
+        var xPos = grX + margin + Math.random() * grWidth;
+        var yPos = grY + margin + Math.random() * grHeight;
         graph.append(createNode(i, xPos, yPos));
     }
 }
@@ -135,14 +173,14 @@ $(document).on('click', '.node', function() {
 
 
 var addOrRemoveEdge = function(node1, node2, elem1, elem2) {
-    if (node1 == node2 && !isDirected)
+    if (node1 == node2 && !graphConfig.isDirected)
         return false;
 
     for (i = 0; i < edges.length; i++) {
         // if the edge exists. delete it
         if (edges[i].node1 && edges[i].node2
            && ((edges[i].node1 == node1  && edges[i].node2 == node2)
-               || (!isDirected && edges[i].node1 == node2  && edges[i].node2 == node1))) {
+               || (!graphConfig.isDirected && edges[i].node1 == node2  && edges[i].node2 == node1))) {
             jsPlumb.detach(edges[i].conn);
             edges.splice(i, 1);
 
@@ -193,7 +231,7 @@ function outputTestCase() {
 
     if (graphConfig.includePositions) {
         for (var i = 0; i < nodes.length; i++) {
-           $('#case').append(nodes[i][0] + " " + nodes[i][1] + "<br>");
+           $('#case').append(round(nodes[i][0], 2) + " " + round(nodes[i][1], 2) + "<br>");
         }
     }
     for (var i = 0; i < edges.length; i++) {
