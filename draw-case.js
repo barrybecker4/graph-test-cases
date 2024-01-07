@@ -92,8 +92,7 @@ $('#generate').click(function() {
 });
 
 function createRadialLayout(start, end) {
-    var graph = $('#graph');
-    graph.html('');
+    var graph = initGraph();
     var grWidth = graph.width();
     var grHeight = graph.height();
 
@@ -110,8 +109,7 @@ function createRadialLayout(start, end) {
 }
 
 function createGridLayout(start, end) {
-    var graph = $('#graph');
-    graph.html('');
+    var graph = initGraph();
     var margin = 10;
     var grWidth = graph.width() - margin;
     var grHeight = graph.height();
@@ -130,8 +128,7 @@ function createGridLayout(start, end) {
 }
 
 function createRandomLayout(start, end) {
-    var graph = $('#graph');
-    graph.html('');
+    var graph = initGraph();
     var margin = 10;
     var grWidth = graph.width() - 3 * margin;
     var grHeight = graph.height() - 3 * margin;
@@ -208,6 +205,12 @@ var addOrRemoveEdge = function(node1, node2, elem1, elem2) {
     return true;
 }
 
+function initGraph() {
+    var graph = $('#graph');
+    graph.html('');
+    return graph;
+}
+
 function getIncludePositions() {
     return $('#includePositions').is(":checked");
 }
@@ -217,18 +220,19 @@ function getIncludeWeights() {
 }
 
 function outputTestCase() {
-    $('#case').html('');
-    $('#case').append("<h4>Result: </h4>")
-    $('#case').append(graphConfig.numNodes + " " + edges.length + " " + graphConfig.includePositions + "<br>");
+    var outputCase = $('#case');
+    outputCase.html('');
+    outputCase.append("<h4>Result: </h4>")
+    outputCase.append(graphConfig.numNodes + " " + edges.length + " " + graphConfig.includePositions + "<br>");
 
     if (graphConfig.includePositions) {
         for (var i = 0; i < nodes.length; i++) {
-           $('#case').append(round(nodes[i][0], 2) + " " + round(nodes[i][1], 2) + "<br>");
+           outputCase.append(round(nodes[i][0], 2) + " " + round(nodes[i][1], 2) + "<br>");
         }
     }
     for (var i = 0; i < edges.length; i++) {
         var edge = edges[i];
         var weightAttr = graphConfig.includeWeights ? " " + round(edge.weight, 2) : "";
-        $('#case').append(edge.node1 + " " + edge.node2 + weightAttr + "<br>");
+        outputCase.append(edge.node1 + " " + edge.node2 + weightAttr + "<br>");
     }
 }
