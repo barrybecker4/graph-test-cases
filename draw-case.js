@@ -1,6 +1,4 @@
 // Features to add
-// - combine random-case into draw case
-// - add random edges
 // - use poisson distribution to avoid overlap
 // - add param for size of node circle
 // - automatically don't show labels if more than 500 nodes

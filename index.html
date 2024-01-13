@@ -27,8 +27,9 @@
             <span style="font-weight: bold">Note: </span> in the case of directed graphs, you have to click on the source node then on the destination node (in order)
         </li>
         <li>The test case follows the typical format in all graph problems:<br>
-        The first line consists on two integers, "N M", where N is the number of nodes and M is the number of edges<br>
-        M lines follow, each containing two integers "i j", meaning that there is an edge between node (i) and node (j).
+        The first line consists on two integers, "N M &lt;hasWeights&gt;", where N is the number of nodes, M is the number of edges, and &lt;hasWeights&gt; is true or false indicating whether the node positions are specified.<br>
+            If nodePositions are specified, then N lines follow the first, giving the x,y coordinates of the nodes.<br>
+            M lines follow that, each containing two integers "i j", meaning that there is an edge between node (i) and node (j).
         </li>
     </ol>
 

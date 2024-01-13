@@ -28,16 +28,15 @@ class Graph {
     }
 
     generate() {
-        var start = 0;
-        var end = parseInt(start) + parseInt(this.config.numNodes) - 1;
+        var numNodes = this.config.numNodes;
 
         this.edges = [];
         this.nodes = [];
 
         switch(this.config.layoutType) {
-            case 'grid': this.createGridLayout(start, end); break;
-            case 'radial': this.createRadialLayout(start, end); break;
-            default: this.createRandomLayout(start, end); break;
+            case 'grid': createGridLayout(numNodes, this); break;
+            case 'radial': createRadialLayout(numNodes, this); break;
+            default: createRandomLayout(numNodes, this); break;
         }
         this.addAutoEdges();
     }
@@ -94,10 +93,10 @@ class Graph {
             target: elem2,
             connector: connector,
             cssClass: "edge",
-//          paintStyle: {  // this does not work, unfortunately
-//                strokeWidth: 4,
-//                stroke: "rgba(86, 117, 103, 0.5)",
-//          },
+            //paintStyle: {  // this does not work, unfortunately
+            //      strokeWidth: 4,
+            //      stroke: "rgba(86, 117, 103, 0.5)",
+            //},
             anchor:'Center',
             overlays: this.config.isDirected ? [["Arrow" , { width:12, length:12, location:0.67 }]] : [],
         });
@@ -146,57 +145,6 @@ class Graph {
     drag_over(event) {
         event.preventDefault();
         return false;
-    }
-
-    createRadialLayout(start, end) {
-        var graphUI = initGraphUI();
-        var grWidth = graphUI.width();
-        var grHeight = graphUI.height();
-
-        var radius = grWidth / 2 - 25;
-        var grX = graphUI.position().left;
-        var grY = graphUI.position().top;
-        var angleDiff = Math.PI * 2 / this.config.numNodes;
-        for (var i = start; i <= end; i++) {
-            var angle = i * angleDiff
-            var xPos = Math.round(grX + radius + Math.cos(angle) * radius / 1.4);
-            var yPos = Math.round(grY + radius + Math.sin(angle) * radius / 1.4);
-            graphUI.append(this.createNode(i, xPos, yPos));
-        }
-    }
-
-    createGridLayout(start, end) {
-        var graphUI = initGraphUI();
-        var margin = 10;
-        var grWidth = graphUI.width() - margin;
-        var grHeight = graphUI.height();
-
-        var nodesOnEdge = Math.ceil(Math.sqrt(this.config.numNodes));
-        var increment = (grWidth - margin) / nodesOnEdge;
-        var grX = graphUI.position().left;
-        var grY = graphUI.position().top;
-        for (var i = start; i <= end; i++) {
-            var row = Math.floor(i / nodesOnEdge);
-            var col = i % nodesOnEdge;
-            var xPos = grX + margin + col * increment;
-            var yPos = grY + margin + row * increment;
-            graphUI.append(this.createNode(i, xPos, yPos));
-        }
-    }
-
-    createRandomLayout(start, end) {
-        var graphUI = initGraphUI();
-        var margin = 10;
-        var grWidth = graphUI.width() - 3 * margin;
-        var grHeight = graphUI.height() - 3 * margin;
-
-        var grX = graphUI.position().left;
-        var grY = graphUI.position().top;
-        for (var i = start; i <= end; i++) {
-            var xPos = grX + margin + Math.random() * grWidth;
-            var yPos = grY + margin + Math.random() * grHeight;
-            graphUI.append(this.createNode(i, xPos, yPos));
-        }
     }
 
     createNode(i, xPos, yPos) {
