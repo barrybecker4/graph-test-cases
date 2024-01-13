@@ -8,8 +8,8 @@ function round(value, decimals) {
 
 // @return the distance between 2 points.
 function distance(pt1, pt2) {
-   var diffX = pt1[0] - pt2[0];
-   var diffY = pt1[1] - pt2[1];
+   var diffX = pt1.x - pt2.x;
+   var diffY = pt1.y - pt2.y;
    return Math.sqrt(diffX * diffX + diffY * diffY);
 }
 

@@ -134,7 +134,7 @@ class Graph {
         var y = (event.clientY + parseInt(offset[1], 10))
         dm.style.left = x + 'px';
         dm.style.top = y + 'px';
-        this.nodes[this.draggedNode] = [x, y];
+        this.nodes[this.draggedNode].setPosition(x, y);
         this.draggedNode = -1;
         jsPlumb.empty("#graph");
         event.preventDefault();
@@ -151,7 +151,7 @@ class Graph {
         var newNode = '<div style="left:' + xPos +
                   'px; top:' + yPos + 'px;" id="node' + i +
                   '" class="node" draggable="true" ondragstart="graph.drag_start(event)" node="' + i + '">' + i + '</div>';
-        this.nodes.push([xPos, yPos]);
+        this.nodes.push(new Node(i, xPos, yPos));
         return newNode;
     }
 
@@ -167,7 +167,7 @@ class Graph {
 
         if (this.config.includePositions) {
             for (var i = 0; i < this.nodes.length; i++) {
-               outputElement.append(round(this.nodes[i][0], 2) + " " + round(this.nodes[i][1], 2) + "<br>");
+               outputElement.append(round(this.nodes[i].x, 2) + " " + round(this.nodes[i].y, 2) + "<br>");
             }
         }
         for (var i = 0; i < this.edges.length; i++) {
