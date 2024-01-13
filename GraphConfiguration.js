@@ -6,5 +6,6 @@ class GraphConfiguration {
         this.includePositions = includePositions;
         this.weightStyle = weightStyle; // 'distance' or 'jittered_distance', 'random'
         this.autoEdgeDensity = autoEdgeDensity;
+        this.numBins = numBins; // for edge locality. Move bins means more edge locality
     }
 }

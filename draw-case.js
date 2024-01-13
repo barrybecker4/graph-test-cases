@@ -20,7 +20,8 @@ $('#generate').click(function() {
     graphConfig.layoutType = getLayoutType();
     graphConfig.weightType = getWeightType();
     graphConfig.includePositions = getIncludePositions();
-    graphConfig.autoEdgeDensity = getAutoEdgeDensity()
+    graphConfig.autoEdgeDensity = getAutoEdgeDensity();
+    graphConfig.numBins = getNumBins();
 
     graph.generate();
     graph.outputTestCase();
@@ -63,5 +64,9 @@ function getIncludePositions() {
 
 function getAutoEdgeDensity() {
     return $('#autoEdgeDensity').val();
+}
+
+function getNumBins() {
+    return $('#numBins').val();
 }
 

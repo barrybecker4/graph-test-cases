@@ -6,6 +6,7 @@ class Graph {
         this.draggedNode = -1;
         this.nodes = [];
         this.edges = [];
+        this.binnedRegions = null;
 
         var self = this;
         $(document).on('click', '.node', function() {
@@ -38,6 +39,7 @@ class Graph {
             case 'radial': createRadialLayout(numNodes, this); break;
             default: createRandomLayout(numNodes, this); break;
         }
+        this.binnedRegions = new BinnedRegions(this.config.numBins, this.nodes);
         this.addAutoEdges();
     }
 

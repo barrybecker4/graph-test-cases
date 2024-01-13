@@ -54,6 +54,12 @@
                       <input type="number" id="autoEdgeDensity" min="0" max="1" step="0.01" value="0">
                   </td>
               </tr>
+              <tr title="">
+                  <th>numBins (Edge Locality):</th>
+                  <td title="The larger this number, the more that auto generated edges will only be on nodes that are close together. This improves the performance of generating edges on large graphs.">
+                      <input type="number" id="numBins" min="2" max="10" step="1" value="3">
+                  </td>
+              </tr>
               <tr>
                   <th>Include node positions:</th>
                   <td>
@@ -83,6 +89,7 @@
   <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
   <script src="jsPlumb-2.1.2.js"></script>
   <script src="Node.js"></script>
+  <script src="BinnedRegions.js"></script>
   <script src="utils.js"></script>
   <script src="graphLayouts.js"></script>
   <script src="GraphConfiguration.js"></script>
