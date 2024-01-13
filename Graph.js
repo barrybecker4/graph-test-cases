@@ -50,13 +50,15 @@ class Graph {
 
         // This is expensive. Consider binning for large graphs
         for (var i = 0; i < numNodes; i++) {
-            for (var j = i + 1; j < numNodes; j++) {
-                var factor = (width - distance(this.nodes[i], this.nodes[j])) / width;
+            var nearbyNodeIndices = this.binnedRegions.getNearbyNodeIndices(this.nodes[i]);
+            for (var j = 0; j < nearbyNodeIndices.length; j++) {
+                var nearbyNode = this.nodes[nearbyNodeIndices[j]];
+                var factor = (width - distance(this.nodes[i], nearbyNode)) / width;
                 var thresh = this.config.autoEdgeDensity * factor * factor;
                 if (Math.random() <= thresh) {
-                    this.addOrRemoveEdge(i, j);
+                    this.addOrRemoveEdge(i, nearbyNode.id);
                     if (this.config.isDirected) {
-                        this.addOrRemoveEdge(j, i);
+                        this.addOrRemoveEdge(nearbyNode.id, i);
                     }
                 }
             }
