@@ -28,7 +28,7 @@ $('#generate').click(function() {
 });
 
 function getNumNodes() {
-    var num = $('#numNodes').val();
+    var num = +$('#numNodes').val();
     return (!num || num <= 0) ? 5 : num;
 }
 
@@ -40,9 +40,10 @@ function getGraphType() {
 function getLayoutType() {
     var layoutSelection = $("input[type='radio'][name='layoutType']:checked").val();
     switch (+layoutSelection) {
-        case 0: return 'grid';
-        case 1: return 'radial';
-        case 2: return 'random';
+        case 0: return 'poisson';
+        case 1: return 'grid';
+        case 2: return 'radial';
+        case 3: return 'random';
         default: throw new Error("Unexpected layout selection: " + layoutSelection);
     }
 }

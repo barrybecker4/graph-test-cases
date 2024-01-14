@@ -49,3 +49,23 @@ function createRandomLayout(numNodes, graph) {
         graphUI.append(graph.createNode(i, xPos, yPos));
     }
 }
+
+function createPoissonLayout(numNodes, graph) {
+    var graphUI = initGraphUI();
+    var margin = 10;
+    var grWidth = graphUI.width() - 2 * margin;
+    var grHeight = graphUI.height() - 2 * margin;
+    var grX = graphUI.position().left;
+    var grY = graphUI.position().top;
+
+    var generator = new PoissonPointGenerator(grWidth, grHeight, margin, numNodes, 30);
+
+    var numNodesAdded = generator.increment(numNodes);
+    console.log(numNodes, " requested ", numNodesAdded, " actually added");
+
+    var nodes = generator.getSamples();
+    for (var i = 0; i < nodes.length; i++) {
+        var node = nodes[i];
+        graphUI.append(graph.createNode(i, grX + node.x, grY + node.y));
+    }
+}

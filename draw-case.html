@@ -34,9 +34,10 @@
               <tr title="Style to layout the generated nodes in">
                   <th>Layout:</th>
                   <td>
-                      <input type="radio" name="layoutType" value="0" checked> Grid&nbsp;
-                      <input type="radio" name="layoutType" value="1" > Radial&nbsp;
-                      <input type="radio" name="layoutType" value="2"> Random&nbsp;
+                      <input type="radio" name="layoutType" value="0" checked> Poisson
+                      <input type="radio" name="layoutType" value="1"> Grid&nbsp;
+                      <input type="radio" name="layoutType" value="2"> Radial&nbsp;
+                      <input type="radio" name="layoutType" value="3"> Random&nbsp;
                   </td>
               </tr>
               <tr>
@@ -51,7 +52,7 @@
               <tr title="Allows auto generation of edges - before manually adding and removing">
                   <th>Auto-edge density:</th>
                   <td title="Af value between 0 and 1 corresponding to the probability of an edge (scaled by distance)">
-                      <input type="number" id="autoEdgeDensity" min="0" max="1" step="0.01" value="0">
+                      <input type="number" id="autoEdgeDensity" min="0" max="1" step="0.01" value="0.1">
                   </td>
               </tr>
               <tr title="">
@@ -91,6 +92,9 @@
   <script src="Node.js"></script>
   <script src="BinnedRegions.js"></script>
   <script src="utils.js"></script>
+  <script src="poisson/PoissonGrid.js"></script>
+  <script src="poisson/ActiveList.js"></script>
+  <script src="poisson/PoissonPointGenerator.js"></script>
   <script src="graphLayouts.js"></script>
   <script src="GraphConfiguration.js"></script>
   <script src="Graph.js"></script>

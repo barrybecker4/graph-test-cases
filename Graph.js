@@ -35,6 +35,7 @@ class Graph {
         this.nodes = [];
 
         switch(this.config.layoutType) {
+            case 'poisson': createPoissonLayout(numNodes, this); break;
             case 'grid': createGridLayout(numNodes, this); break;
             case 'radial': createRadialLayout(numNodes, this); break;
             default: createRandomLayout(numNodes, this); break;
@@ -53,6 +54,7 @@ class Graph {
         // This is expensive. Binning the nodes helps performance.
         for (var i = 0; i < numNodes; i++) {
             var nearbyNodeIndices = this.binnedRegions.getNearbyNodeIndices(this.nodes[i]);
+            if (i % 20 == 0) console.log("Processed " + i + " nodes");
             for (const j of nearbyNodeIndices) {
                 var nearbyNode = this.nodes[j];
                 var factor = (width - distance(this.nodes[i], nearbyNode)) / width;
@@ -104,7 +106,7 @@ class Graph {
             paintStyle:{ lineWidth: 1, strokeStyle: "#447", strokeOpacity: 0.2, outlineWidth: 0 },
             hoverPaintStyle:{ lineWidth: 3, strokeStyle: "#44C" },
             anchor:'Center',
-            overlays: this.config.isDirected ? [["Arrow" , { width:7, length:7, location:0.7 }]] : [],
+            overlays: this.config.isDirected ? [["Arrow" , { width: 6, length: 6, location: 0.7 }]] : [],
         });
         this.edges.push({
             node1: node1,
