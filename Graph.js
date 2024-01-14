@@ -46,15 +46,17 @@ class Graph {
     addAutoEdges() {
         var numNodes = this.config.numNodes;
         var width = $("#graph").width();
-        console.log("width = " + width);
+        var startTime = new Date().getTime();
+        var binSize = this.binnedRegions.binSize;
+        console.log("width=" + width + " binSize=" + binSize);
 
-        // This is expensive. Consider binning for large graphs
+        // This is expensive. Binning the nodes helps performance.
         for (var i = 0; i < numNodes; i++) {
             var nearbyNodeIndices = this.binnedRegions.getNearbyNodeIndices(this.nodes[i]);
-            for (var j = 0; j < nearbyNodeIndices.length; j++) {
-                var nearbyNode = this.nodes[nearbyNodeIndices[j]];
+            for (const j of nearbyNodeIndices) {
+                var nearbyNode = this.nodes[j];
                 var factor = (width - distance(this.nodes[i], nearbyNode)) / width;
-                var thresh = this.config.autoEdgeDensity * factor * factor;
+                var thresh = this.config.autoEdgeDensity * factor;
                 if (Math.random() <= thresh) {
                     this.addOrRemoveEdge(i, nearbyNode.id);
                     if (this.config.isDirected) {
@@ -63,6 +65,8 @@ class Graph {
                 }
             }
         }
+        var msec = new Date().getTime() - startTime;
+        console.log("done adding auto-edges in " + msec / 1000 + "s");
     }
 
     addOrRemoveEdge(node1, node2) {
@@ -87,9 +91,9 @@ class Graph {
 
         var connector = 'Straight';
         if (this.config.isDirected) { // draw edge as curve
-            connector = ['StateMachine', { curviness:20 }];
+            connector = ['StateMachine', { curviness: 20, proximityLimit: 90 }];
             if (node2 < node1)
-                connector = ['StateMachine', { curviness:-20 }];
+                connector = ['StateMachine', { curviness: -20, size: 1, proximityLimit: 200 }];
         }
 
         var connection = jsPlumb.connect({
@@ -97,12 +101,10 @@ class Graph {
             target: elem2,
             connector: connector,
             cssClass: "edge",
-            //paintStyle: {  // this does not work, unfortunately
-            //      strokeWidth: 4,
-            //      stroke: "rgba(86, 117, 103, 0.5)",
-            //},
+            paintStyle:{ lineWidth: 1, strokeStyle: "#447", strokeOpacity: 0.2, outlineWidth: 0 },
+            hoverPaintStyle:{ lineWidth: 3, strokeStyle: "#44C" },
             anchor:'Center',
-            overlays: this.config.isDirected ? [["Arrow" , { width:12, length:12, location:0.67 }]] : [],
+            overlays: this.config.isDirected ? [["Arrow" , { width:7, length:7, location:0.7 }]] : [],
         });
         this.edges.push({
             node1: node1,

@@ -16,7 +16,7 @@ class BinnedRegions {
         this.yMin = Number.MAX_SAFE_INTEGER;
         this.binSize = this.calcBinSize(numBins, nodes);
         this.positionToNearbyIndicesCache = new Map();
-        this.positionToCell = this.createCells(nodes); // Map[IntLocation, Cell]
+        this.positionToCell = this.createCells(nodes);
     }
 
     createCells(nodes) {
@@ -38,32 +38,32 @@ class BinnedRegions {
         return cellMap;
     }
 
-    // consider adding caching
+    // @return a set of integer indices representing the nearby nodes
     getNearbyNodeIndices(node) {
         var cellLocation = this.getCellPositionKey(node);
         if (!this.positionToNearbyIndicesCache.has(cellLocation)) {
             var position = this.parsePositionKey(cellLocation);
 
-            var items = [];
+            var items = new Set();
             for (var i = position[0] - 1; i <= position[0] + 1; i++) {
                 for (var j = position[1] - 1; j <= position[1] + 1; j++) {
                     var positionKey = i + '_' + j;
                     if (this.positionToCell[positionKey]) {
-                        var itemsToAdd = [...this.positionToCell[positionKey].itemIndices].filter(idx => idx != node.id);
-                        items = items.concat(itemsToAdd);
+                        for (const item of this.positionToCell[positionKey].itemIndices)
+                            items.add(item);
                     }
                 }
             }
+            items.delete(node.id);
             this.positionToNearbyIndicesCache.set(cellLocation, items);
         }
-
 
         return this.positionToNearbyIndicesCache.get(cellLocation);
     }
 
     // The position key has the form "i_j"
     getCellPositionKey(node) {
-        return Math.floor((node.x - this.xMin) / this.binSize) + '_' + Math.floor((node.y - this.yMin) /this.binSize);
+        return Math.floor((node.x - this.xMin) / this.binSize) + '_' + Math.floor((node.y - this.yMin) / this.binSize);
     }
 
     // The position key has the form "i_j", this returns [i, j] in array form
@@ -90,11 +90,11 @@ class BinnedRegions {
                 yMax = node.y;
             }
         }
-        var xRange = xMax - this.xMin;
-        var yRange = yMax - this.yMin;
+        var xRange = xMax - this.xMin + 1;
+        var yRange = yMax - this.yMin + 1;
 
-        var binSize = (xRange < yRange) ? xRange / numBins : yRange / numBins;
-        return Math.floor(binSize);
+        var binSize = (xRange > yRange) ? xRange / numBins : yRange / numBins;
+        return binSize;
     }
 
 }

@@ -50,9 +50,10 @@ function getLayoutType() {
 function getWeightType() {
     var weightSelection = $("input[type='radio'][name='weightType']:checked").val();
     switch (+weightSelection) {
-        case 0: return 'distance';
-        case 1: return 'jittered_distance';
-        case 2: return 'random';
+        case 0: return 'none';
+        case 1: return 'distance';
+        case 2: return 'jittered_distance';
+        case 3: return 'random';
         default: throw new Error("Unexpected weight selection: " + weightSelection);
     }
 }

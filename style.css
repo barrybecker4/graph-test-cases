@@ -47,8 +47,8 @@ html, body {
 }
 .node {
     position:  absolute;
-    width: 30px;
-    height: 30px;
+    width: 25px;
+    height: 25px;
     cursor: move;
     border: 1px solid black;
     border-radius: 50px;
@@ -59,8 +59,8 @@ html, body {
     z-index: 10;
 }
 .edge {
-    stroke-width: 2,
-    color: '#567567',
+    stroke-width: 1,
+    color: '#2275ff',
     /* stroke: "rgba(86, 117, 103, 0.5)",*/
 }
 
