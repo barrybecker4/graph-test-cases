@@ -53,6 +53,7 @@ class Graph {
 
         // This is expensive. Binning the nodes helps performance.
         for (var i = 0; i < numNodes; i++) {
+            if (!this.nodes[i]) throw new Error("could not find node at idx " + i);
             var nearbyNodeIndices = this.binnedRegions.getNearbyNodeIndices(this.nodes[i]);
             if (i % 20 == 0) console.log("Processed " + i + " nodes");
             for (const j of nearbyNodeIndices) {

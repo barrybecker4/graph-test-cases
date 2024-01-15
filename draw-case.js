@@ -69,6 +69,6 @@ function getAutoEdgeDensity() {
 }
 
 function getNumBins() {
-    return $('#numBins').val();
+    return +$('#numBins').val();
 }
 

@@ -60,12 +60,15 @@ function createPoissonLayout(numNodes, graph) {
 
     var generator = new PoissonPointGenerator(grWidth, grHeight, margin, numNodes, 30);
 
-    var numNodesAdded = generator.increment(numNodes);
-    console.log(numNodes, " requested ", numNodesAdded, " actually added");
-
+    var numNodesAdded = generator.increment(numNodes - 1);
     var nodes = generator.getSamples();
+    console.log((numNodes -1), " requested ", numNodesAdded, " actually added");
+    if (nodes.length != numNodesAdded + 1)
+        console.log("Error: nodes.len=" + nodes.length + " numNodesAdded=" + numNodesAdded);
+
     for (var i = 0; i < nodes.length; i++) {
         var node = nodes[i];
         graphUI.append(graph.createNode(i, grX + node.x, grY + node.y));
     }
+    //graph.config.numNodes = nodes.length; I want to avoid this hack. Try to add the requested num nodes
 }

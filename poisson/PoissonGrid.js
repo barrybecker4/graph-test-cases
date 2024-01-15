@@ -2,8 +2,9 @@ class PoissonGrid {
 
     constructor(width, height, margin, radius) {
         this.cellSize = radius / Math.sqrt(2.0);
-        this.xBins = Math.floor(width / this.cellSize + 1);
-        this.yBins = Math.floor(height / this.cellSize + 1);
+        this.xBins = Math.floor(width / this.cellSize + 1.0);
+        this.yBins = Math.floor(height / this.cellSize + 1.0);
+        console.log("xbins = " + this.xBins + " ybins = " + this.yBins);
         this.grid = [];
         this.width = width;
         this.height = height;
@@ -24,7 +25,7 @@ class PoissonGrid {
 
         // try k random neighboring points, if none accepted, return -1
         for (let i = 0; i < k; i++) {
-            var nbrPoint = this.getRandomNeighborOf(point);
+            var nbrPoint = this.getRandomNeighborOf(point, this.radius);
             var distantEnough = this.isDistantFromAllNeighbors(nbrPoint);
             if (distantEnough) {
                 return this.addSample(nbrPoint);
@@ -46,12 +47,12 @@ class PoissonGrid {
         return Math.floor(d / this.cellSize);
     }
 
-    getRandomNeighborOf(point) {
+    getRandomNeighborOf(point, rad) {
         var x = -1;
         var y = -1;
         var ct = 0;
         while (x < this.margin || y < this.margin || x > this.width - this.margin || y > this.height - this.margin) {
-          var randomRadius = this.radius + Math.random() * this.radius;
+          var randomRadius = rad + Math.random() * rad;
           var randomAngle = Math.random() * Math.PI * 2.0;
           x = point.x + randomRadius * Math.cos(randomAngle);
           y = point.y + randomRadius * Math.sin(randomAngle);

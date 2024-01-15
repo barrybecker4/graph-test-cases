@@ -63,6 +63,7 @@ class BinnedRegions {
 
     // The position key has the form "i_j"
     getCellPositionKey(node) {
+        if (!node || !node.x) throw new Error("bad node " + JSON.stringify(node));
         return Math.floor((node.x - this.xMin) / this.binSize) + '_' + Math.floor((node.y - this.yMin) / this.binSize);
     }
 
