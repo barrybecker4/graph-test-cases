@@ -47,14 +47,15 @@ html, body {
 }
 .node {
     position:  absolute;
-    width: 25px;
+    width: 26px;
     height: 25px;
     cursor: move;
     border: 1px solid black;
     border-radius: 50px;
     text-align: center;
-    vertical-align: middle;
-    font-size: 18px;
+    vertical-align: center;
+    font-size: 14px;
+    line-height: 25px;
     background-color: white;
     z-index: 10;
 }
