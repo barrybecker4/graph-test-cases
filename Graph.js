@@ -51,6 +51,7 @@ class Graph {
         const startTime = new Date().getTime();
         const binSize = this.binnedRegions.binSize;
         const binSize3 = 3 * binSize;
+        const isDirected = this.config.isDirected;
 
         console.log("width=" + width + " binSize=" + binSize);
 
@@ -67,11 +68,11 @@ class Graph {
                 var factor = (binSize3 - distance(this.nodes[i], nearbyNode)) / binSize3;
                 var thresh = this.config.autoEdgeDensity * factor;
                 const other = nearbyNode.id;
-                if (Math.random() <= thresh && i != other) {
-                    if (!this.edges.has(i + '_' + other)) {
+                if (i != other) {
+                    if (Math.random() <= thresh && !this.edges.has(i + '_' + other)) {
                         if (this.addOrRemoveEdge(i, other)) ct++;
                     }
-                    if (this.config.isDirected && !this.edges.has(other + '_' + i)) {
+                    if (isDirected && Math.random() <= thresh && !this.edges.has(other + '_' + i)) {
                         if (this.addOrRemoveEdge(other, i)) ct++;
                     }
                 }
@@ -104,9 +105,9 @@ class Graph {
         const elem2 = $('#node' + node2);
         let connector = 'Straight';
         if (this.config.isDirected) { // draw edge as curve
-            connector = ['StateMachine', { curviness: 20, proximityLimit: 90 }];
             if (node2 < node1)
-                connector = ['StateMachine', { curviness: -20, size: 1, proximityLimit: 200 }];
+                 connector = ['StateMachine', { curviness: -20, size: 1, proximityLimit: 200 }];
+            else connector = ['StateMachine', { curviness: 20, proximityLimit: 90 }];
         }
 
         var connection = jsPlumb.connect({
@@ -114,8 +115,8 @@ class Graph {
             target: elem2,
             connector: connector,
             cssClass: "edge",
-            paintStyle:{ lineWidth: 1, strokeStyle: "#447", strokeOpacity: 0.2, outlineWidth: 0 },
-            hoverPaintStyle:{ lineWidth: 3, strokeStyle: "#44C" },
+            paintStyle: { lineWidth: 1, strokeStyle: "#447", strokeOpacity: 0.2, outlineWidth: 0 },
+            hoverPaintStyle: { lineWidth: 3, strokeStyle: "#44C" },
             anchor:'Center',
             overlays: this.config.isDirected ? [["Arrow" , { width: 6, length: 6, location: 0.7 }]] : [],
         });
