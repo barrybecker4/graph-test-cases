@@ -44,12 +44,13 @@ class BinnedRegions {
         if (!this.positionToNearbyIndicesCache.has(cellLocation)) {
             var position = this.parsePositionKey(cellLocation);
 
-            var items = new Set();
-            for (var i = position[0] - 1; i <= position[0] + 1; i++) {
-                for (var j = position[1] - 1; j <= position[1] + 1; j++) {
+            const items = new Set();
+            for (let i = position[0] - 1; i <= position[0] + 1; i++) {
+                for (let j = position[1] - 1; j <= position[1] + 1; j++) {
                     var positionKey = i + '_' + j;
-                    if (this.positionToCell[positionKey]) {
-                        for (const item of this.positionToCell[positionKey].itemIndices)
+                    var cell = this.positionToCell[positionKey]
+                    if (cell) {
+                        for (const item of cell.itemIndices)
                             items.add(item);
                     }
                 }

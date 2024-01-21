@@ -5,7 +5,7 @@ class Graph {
         this.bound = null;
         this.draggedNode = -1;
         this.nodes = [];
-        this.edges = [];
+        this.edges = new Map();
         this.binnedRegions = null;
 
         var self = this;
@@ -19,6 +19,7 @@ class Graph {
                 var node1 = self.bound.attr('node');
                 var node2 = $(this).attr('node');
                 var added = self.addOrRemoveEdge(node1, node2);
+                self.outputTestCase();
 
                 self.bound.css('border-color', 'black');
                 self.bound.css('border-width','1px');
@@ -31,7 +32,7 @@ class Graph {
     generate() {
         var numNodes = this.config.numNodes;
 
-        this.edges = [];
+        this.edges = new Map();
         this.nodes = [];
 
         switch(this.config.layoutType) {
@@ -69,30 +70,30 @@ class Graph {
             }
         }
         var msec = new Date().getTime() - startTime;
+        this.outputTestCase();
         console.log("done adding auto-edges in " + msec / 1000 + "s");
     }
 
     addOrRemoveEdge(node1, node2) {
-        var elem1 = $('#node' + node1);
-        var elem2 = $('#node' + node2);
+
         if (node1 == node2 && !this.config.isDirected)
             return false;
 
-        for (var i = 0; i < this.edges.length; i++) {
+        const key = node1 + '_' + node2;
+        if (this.edges.has(key)) {
+            const edge = this.edges.get(key);
             // if the edge exists. delete it
-            var edge = this.edges[i];
-            if (edge.node1 && edge.node2
-               && ((edge.node1 == node1  && edge.node2 == node2)
+            if (edge.node1 && edge.node2 && ((edge.node1 == node1  && edge.node2 == node2)
                    || (!this.config.isDirected && edge.node1 == node2  && edge.node2 == node1))) {
-                jsPlumb.detach(edge.conn);
-                this.edges.splice(i, 1);
-
-                this.outputTestCase();
-                return false;
+                  jsPlumb.detach(edge.conn);
+                  this.edges.delete(key);
+                  return false;
             }
         }
 
-        var connector = 'Straight';
+        const elem1 = $('#node' + node1);
+        const elem2 = $('#node' + node2);
+        let connector = 'Straight';
         if (this.config.isDirected) { // draw edge as curve
             connector = ['StateMachine', { curviness: 20, proximityLimit: 90 }];
             if (node2 < node1)
@@ -109,13 +110,12 @@ class Graph {
             anchor:'Center',
             overlays: this.config.isDirected ? [["Arrow" , { width: 6, length: 6, location: 0.7 }]] : [],
         });
-        this.edges.push({
+        this.edges.set(key, {
             node1: node1,
             node2: node2,
             conn: connection,
             weight: this.calculateWeight(this.nodes[+node1], this.nodes[+node2])
         });
-        this.outputTestCase();
         return true;
     }
 
@@ -172,17 +172,16 @@ class Graph {
     }
 
     serialize(outputElement) {
-        outputElement.append(this.config.numNodes + " " + this.edges.length + " " + this.config.includePositions + "<br>");
+        outputElement.append(this.config.numNodes + " " + this.edges.size + " " + this.config.includePositions + "<br>");
 
         if (this.config.includePositions) {
             for (var i = 0; i < this.nodes.length; i++) {
                outputElement.append(round(this.nodes[i].x, 2) + " " + round(this.nodes[i].y, 2) + "<br>");
             }
         }
-        for (var i = 0; i < this.edges.length; i++) {
-            var edge = this.edges[i];
+        for (const edge of this.edges.values()) {
             var weightAttr = this.config.weightType != 'none' ? " " + round(edge.weight, 2) : "";
             outputElement.append(edge.node1 + " " + edge.node2 + weightAttr + "<br>");
-        }
+        };
     }
 }

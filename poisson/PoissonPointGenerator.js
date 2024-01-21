@@ -3,7 +3,7 @@ class PoissonPointGenerator {
 
     constructor(width, height, margin, numPoints, k) {
         this.k = k ? k : 30;
-        var radius = Math.max(2, Math.floor((Math.min(width, height) - margin) / Math.ceil(Math.sqrt(numPoints) + 2)));
+        var radius = Math.max(2, Math.floor((Math.min(width, height) - margin) / Math.ceil(Math.sqrt(1.4 * numPoints) + 1)));
         console.log(radius);
 
         this.grid = new PoissonGrid(width, height, margin, radius);
