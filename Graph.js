@@ -46,28 +46,37 @@ class Graph {
     }
 
     addAutoEdges() {
-        var numNodes = this.config.numNodes;
-        var width = $("#graph").width();
-        var startTime = new Date().getTime();
-        var binSize = this.binnedRegions.binSize;
+        const numNodes = this.config.numNodes;
+        const width = $("#graph").width();
+        const startTime = new Date().getTime();
+        const binSize = this.binnedRegions.binSize;
+        const binSize3 = 3 * binSize;
+
         console.log("width=" + width + " binSize=" + binSize);
 
         // This is expensive. Binning the nodes helps performance.
         for (var i = 0; i < numNodes; i++) {
             if (!this.nodes[i]) throw new Error("could not find node at idx " + i);
             var nearbyNodeIndices = this.binnedRegions.getNearbyNodeIndices(this.nodes[i]);
-            if (i % 20 == 0) console.log("Processed " + i + " nodes");
+            if (i % 10 == 0) {
+                console.log("Processed " + i + " nodes");
+            }
+            let ct = 0;
             for (const j of nearbyNodeIndices) {
                 var nearbyNode = this.nodes[j];
-                var factor = (width - distance(this.nodes[i], nearbyNode)) / width;
+                var factor = (binSize3 - distance(this.nodes[i], nearbyNode)) / binSize3;
                 var thresh = this.config.autoEdgeDensity * factor;
-                if (Math.random() <= thresh) {
-                    this.addOrRemoveEdge(i, nearbyNode.id);
-                    if (this.config.isDirected) {
-                        this.addOrRemoveEdge(nearbyNode.id, i);
+                const other = nearbyNode.id;
+                if (Math.random() <= thresh && i != other) {
+                    if (!this.edges.has(i + '_' + other)) {
+                        if (this.addOrRemoveEdge(i, other)) ct++;
+                    }
+                    if (this.config.isDirected && !this.edges.has(other + '_' + i)) {
+                        if (this.addOrRemoveEdge(other, i)) ct++;
                     }
                 }
             }
+            //console.log(ct + " edges added for node " + i + " out of " + nearbyNodeIndices.size + " nearby");
         }
         var msec = new Date().getTime() - startTime;
         this.outputTestCase();
